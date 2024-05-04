@@ -1,0 +1,105 @@
+﻿@page "/"
+
+<h1>Список пицц</h1>
+
+<div class="row">
+    @foreach (var product in Products)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <img class="card-img-top" src="@product.ImageUrl" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">@product.Description</p>
+                    <p class="card-text">Цена: @product.Price.ToString("C")</p>
+                    <button class="btn btn-primary" @onclick="() => AddToCart(product)">Добавить</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<h2>Корзина</h2>
+<ul>
+    @foreach (var item in CartItems)
+    {
+        <li>@item.Product.Name - @item.Product.Price.ToString("C")</li>
+    }
+</ul>
+<p><strong>Общая сумма: @TotalPrice.ToString("C")</strong></p>
+
+@code {
+    List<Product> Products;
+    List<CartItem> CartItems = new List<CartItem>();
+    decimal TotalPrice = 0;
+
+    public class CartItem
+    {
+        public Product Product { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        Products = new List<Product>
+        {
+            new Product
+            {
+                Name = "Пепперони",
+                Description = "Пицца с пепперони и сыром",
+                ImageUrl = "/images/pepperoni.jpg",
+                Price = 666
+            },
+            new Product
+            {
+                Name = "Маргарита",
+                Description = "Классическая пицца с помидорами и сыром",
+                ImageUrl = "/images/margherita.jpg",
+                Price = 555
+            },
+            new Product
+            {
+                Name = "Гавайская",
+                Description = "Пицца с ветчиной, ананасами и сыром",
+                ImageUrl = "/images/hawaiian.jpg",
+                Price = 450
+            },
+            new Product
+            {
+                Name = "Вегетарианская",
+                Description = "Пицца с овощами и сыром",
+                ImageUrl = "/images/vegetarian.jpg",
+                Price = 650
+            },
+            new Product
+            {
+                Name = "Четыре сыра",
+                Description = "Пицца с сырами: моцарелла, дор блю, чеддер и пармезан",
+                ImageUrl = "/images/four_cheese.jpg",
+                Price = 600
+            },
+            new Product
+            {
+                Name = "Мексиканская",
+                Description = "Пицца с мексиканской начинкой: острый фарш, перец, лук, помидоры",
+                ImageUrl = "/images/mexican.jpg",
+                Price = 700
+            },
+            new Product
+            {
+                Name = "Мясная",
+                Description = "Пицца с мясной начинкой: ветчина, пепперони, колбаски, говядина",
+                ImageUrl = "/images/meat_lovers.jpg",
+                Price = 500
+            }
+        };
+    }
+
+    void AddToCart(Product product)
+    {
+        var cartItem = new CartItem { Product = product, Price = product.Price };
+        CartItems.Add(cartItem);
+        TotalPrice += cartItem.Price;
+    }
+}
+
